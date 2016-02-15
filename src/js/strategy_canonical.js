@@ -10,6 +10,8 @@
  */
 (function () {
    'use strict';
+
+
     var Shipping = function() {
         this.company = "";
     };
@@ -23,6 +25,7 @@
         }
     };
 
+	// STRATEGIES
     var UPS = function() {
         this.calculate = function(thePackage) {
             // calculations...
@@ -62,10 +65,12 @@
         shipping.setStrategy(usps);
         console.log("USPS Strategy: " + shipping.calculate(thePackage));
         shipping.setStrategy(fedex);
+		shipping.company = null;
         console.log("Fedex Strategy: " + shipping.calculate(thePackage));
         console.log(shipping);
     }
     console.log('\n\n------------------------\nSTRATEGY PATTERN:\nCanonical implementation using prototypes or classes');
     run();
+
 
 }());

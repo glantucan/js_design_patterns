@@ -4,7 +4,7 @@
  *                  maintains a reference to the current Strategy object
  *                  supports interface to allow clients to request Strategy calculations
  *                  allows clients to change Strategy
- *      Strategy -- In sample code: UPS, USPS, Fedex
+ *      Strategy -- In sample code: ups, usps, fedex
  *                  implements the algorithm using the Strategy interface
  *
  */
@@ -13,55 +13,40 @@
 
     // FACTORY FOR CONTEXT OBJECTS
     function createShipping() {
-        var proto = {},
+        var proto,
             shipping;
-        proto.setStrategy = function(company) {
-            this.company = company;
-        };
-        proto.calculate = function(thePackage) {
-            var cost;
-            if (!this.company) {
-                cost = "Can't calculate without a company defined";
-            } else {
-                cost = this.company.calculate(thePackage);
-            }
-            return cost;
-        };
+        proto = {
+			setStrategy: function (company) {
+				this.company = company;
+			},
+			calculate: function (thePackage) {
+				return (this.company)? this.company(thePackage) : "Can't calculate!";
+			}
+		};
+		Object.freeze(proto);
         shipping = Object.create(proto);
         shipping.company = undefined;
         return shipping;
     }
 
     // STRATEGIES
-    var UPS = function() {
-        this.calculate = function(thePackage) {
-            // calculations...
-            return "$45.95";
-        }
+    var ups = function(thePackage) {
+		// calculations...
+		return "$45.95";
     };
 
-    var USPS = function() {
-        this.calculate = function(thePackage) {
-            // calculations...
-            return "$39.40";
-        }
+    var usps = function(thePackage) {
+		// calculations...
+		return "$39.40";
     };
 
-    var Fedex = function() {
-        this.calculate = function(thePackage) {
-            // calculations...
-            return "$43.20";
-        }
-    };
+    var fedex =  function(thePackage) {
+		// calculations...
+		return "$43.20";
+	};
 
     function run() {
         var thePackage = { from: "76712", to: "10012", weigth: "lkg" };
-
-        // the 3 strategies
-
-        var ups = new UPS();
-        var usps = new USPS();
-        var fedex = new Fedex();
 
         var shipping = createShipping();
 
@@ -69,13 +54,15 @@
         console.log("UPS Strategy: " + shipping.calculate(thePackage));
         shipping.setStrategy(usps);
         console.log("USPS Strategy: " + shipping.calculate(thePackage));
+		shipping.setStrategy= null;
         shipping.setStrategy(fedex);
+		shipping.company = null;
         console.log("Fedex Strategy: " + shipping.calculate(thePackage));
 
         console.log(shipping);
     }
 
-    console.log('\n\n------------------------\nSTRATEGY PATTERN:\nMy implementation using factory functions');
+    console.log('\n\n------------------------\nSTRATEGY PATTERN:\nImplementation using the functional nature of javascript');
     run();
 
 }());
